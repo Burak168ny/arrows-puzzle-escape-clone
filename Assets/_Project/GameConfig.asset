@@ -23,8 +23,13 @@ MonoBehaviour:
     ShowDots: 0
     DotColor: {r: 0, g: 0, b: 0, a: 0.12}
     DotSize: 0.12
+    TrailDots: 1
+    TrailDotColor: {r: 0.063, g: 0.071, b: 0.141, a: 0.35}
+    TrailDotSize: 0.1
+    TrailHold: 0.12
+    TrailFade: 0.55
     Palette:
-    - {r: 0.106, g: 0.118, b: 0.212, a: 1}
+    - {r: 0.063, g: 0.071, b: 0.141, a: 1}
     ConfettiPalette:
     - {r: 0.27, g: 0.49, b: 0.91, a: 1}
     - {r: 0.96, g: 0.55, b: 0.18, a: 1}
@@ -33,9 +38,9 @@ MonoBehaviour:
     - {r: 0.93, g: 0.33, b: 0.49, a: 1}
     - {r: 0.98, g: 0.8, b: 0.2, a: 1}
   Arrows:
-    LineWidth: 0.17
-    HeadLength: 0.42
-    HeadWidth: 0.5
+    LineWidth: 0.13
+    HeadLength: 0.4
+    HeadWidth: 0.44
     CornerVertices: 0
     CapVertices: 0
     SortingOrder: 10
@@ -49,6 +54,7 @@ MonoBehaviour:
     SpawnStagger: 0.55
     PunchDuration: 0.16
     PunchScale: 0.5
+    PunchBrighten: 0
     BumpOvershoot: 0.12
     BumpSpeed: 22
     BounceBackDuration: 0.45

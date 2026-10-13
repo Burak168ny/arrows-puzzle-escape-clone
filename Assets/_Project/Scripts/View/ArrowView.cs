@@ -326,7 +326,10 @@ namespace Arrows.View
             c.a *= _alpha * Mathf.Clamp01(SpawnProgress * 3f);
             _line.startColor = c;
             _line.endColor = c;
-            for (int i = 0; i < _headColors.Length; i++) _headColors[i] = c;
+            // The line color is converted to linear by Unity; the head mesh needs the same conversion
+            // or it renders lighter than the body.
+            var headColor = VertexColor.FromSrgb(c);
+            for (int i = 0; i < _headColors.Length; i++) _headColors[i] = headColor;
             _headMesh.colors = _headColors;
         }
 

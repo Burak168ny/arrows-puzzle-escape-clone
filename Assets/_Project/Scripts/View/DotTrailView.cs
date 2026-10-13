@@ -49,7 +49,7 @@ namespace Arrows.View
         {
             _width = layout.Width;
             _height = layout.Height;
-            _color = theme.TrailDotColor;
+            _color = VertexColor.FromSrgb(theme.TrailDotColor);
             _hold = Mathf.Max(0f, theme.TrailHold);
             _fade = Mathf.Max(0.01f, theme.TrailFade);
             gameObject.SetActive(theme.TrailDots);

@@ -212,7 +212,7 @@ namespace Arrows.View
                 _dotUvs.Add(new Vector2(0, 1));
                 _dotUvs.Add(new Vector2(1, 1));
                 _dotUvs.Add(new Vector2(1, 0));
-                for (int k = 0; k < 4; k++) _dotColors.Add(_theme.DotColor);
+                for (int k = 0; k < 4; k++) _dotColors.Add(VertexColor.FromSrgb(_theme.DotColor));
                 _dotTris.Add(i);
                 _dotTris.Add(i + 1);
                 _dotTris.Add(i + 2);

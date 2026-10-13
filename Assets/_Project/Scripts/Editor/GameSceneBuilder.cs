@@ -30,10 +30,11 @@ namespace Arrows.Editor
         private const string MaterialPath = Root + "/Art/ArrowSprite.mat";
         private const string AudioLibraryPath = Root + "/Audio/AudioLibrary.asset";
 
-        private static readonly Color Ink = new Color(0.17f, 0.18f, 0.22f);
+        private static readonly Color Ink = BoardTheme.Ink;
+        private static readonly Color Chip = new Color(0.95f, 0.95f, 0.97f);
+        private static readonly Color Divider = new Color(0f, 0f, 0f, 0.07f);
         private static readonly Color Green = new Color(0.30f, 0.72f, 0.48f);
         private static readonly Color Orange = new Color(0.96f, 0.58f, 0.20f);
-        private static readonly Color Neutral = new Color(1f, 1f, 1f, 0.95f);
         private static readonly Color Dim = new Color(0.08f, 0.09f, 0.12f, 0.55f);
 
         private static Sprite _rounded;
@@ -54,6 +55,32 @@ namespace Arrows.Editor
             var check = new SerializedObject(game).FindProperty("_config").objectReferenceValue;
             if (check == null) Debug.LogError("[Arrows] GameConfig was not assigned to GameManager. Please report this.");
             else Debug.Log($"[Arrows] Game scene created at {ScenePath}. Press Play.");
+        }
+
+        /// <summary>White board, thin monochrome arrows, no dots: the look of the original game.</summary>
+        [MenuItem("Tools/Arrows/Apply Classic Style", priority = 2)]
+        public static void ApplyClassicStyle()
+        {
+            var config = AssetDatabase.LoadAssetAtPath<GameConfig>(ConfigPath);
+            if (config == null)
+            {
+                Debug.LogWarning("[Arrows] No GameConfig yet. Run Setup Game Scene first.");
+                return;
+            }
+
+            Undo.RecordObject(config, "Apply Classic Style");
+            config.Theme.ApplyClassicColors();
+            config.Arrows.ApplyClassicShape();
+            EditorUtility.SetDirty(config);
+            AssetDatabase.SaveAssets();
+
+            var cam = Camera.main;
+            if (cam != null)
+            {
+                Undo.RecordObject(cam, "Apply Classic Style");
+                cam.backgroundColor = config.Theme.BackgroundColor;
+            }
+            Debug.Log("[Arrows] Classic style applied to GameConfig.");
         }
 
         [MenuItem("Tools/Arrows/Refresh Level Database", priority = 1)]
@@ -95,6 +122,7 @@ namespace Arrows.Editor
 
         private static GameConfig GetOrCreateConfig()
         {
+            bool created = AssetDatabase.LoadAssetAtPath<GameConfig>(ConfigPath) == null;
             LoadOrCreate<GameConfig>(ConfigPath);
             var db = RefreshLevelDatabase();
 
@@ -102,6 +130,11 @@ namespace Arrows.Editor
             var config = AssetDatabase.LoadAssetAtPath<GameConfig>(ConfigPath);
             config.Levels = db;
             if (config.Theme.SpriteMaterial == null) config.Theme.SpriteMaterial = GetOrCreateSpriteMaterial();
+            if (created)
+            {
+                config.Theme.ApplyClassicColors();
+                config.Arrows.ApplyClassicShape();
+            }
             EditorUtility.SetDirty(config);
             AssetDatabase.SaveAssets();
             return config;
@@ -208,26 +241,37 @@ namespace Arrows.Editor
             var safe = Stretch(NewRect("SafeArea", canvasGo.transform));
             safe.gameObject.AddComponent<SafeArea>();
 
-            // HUD
+            // HUD: a minimal top bar like the original (hearts centered, hairline divider below).
             var hudPanel = NewPanel<UIPanel>("HUD", safe, null);
             var hud = hudPanel.gameObject.AddComponent<HudView>();
-            var levelText = NewText("LevelText", hudPanel.transform, "Level 1", 64, FontStyles.Bold);
-            Place(levelText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -60f), new Vector2(480f, 90f));
 
-            var hearts = Place(NewRect("Hearts", hudPanel.transform), new Vector2(0.5f, 1f), new Vector2(0f, -160f), new Vector2(400f, 70f));
+            var hearts = Place(NewRect("Hearts", hudPanel.transform), new Vector2(0.5f, 1f), new Vector2(0f, -45f), new Vector2(360f, 80f));
             var row = hearts.gameObject.AddComponent<HorizontalLayoutGroup>();
-            row.spacing = 14f;
+            row.spacing = 6f;
             row.childAlignment = TextAnchor.MiddleCenter;
             row.childControlWidth = row.childControlHeight = false;
             row.childForceExpandWidth = row.childForceExpandHeight = false;
 
-            var settingsButton = NewButton("SettingsButton", hudPanel.transform, "Settings", Neutral, 40, out _);
-            Place(settingsButton, new Vector2(0f, 1f), new Vector2(40f, -50f), new Vector2(250f, 110f));
-            var restartButton = NewButton("RestartButton", hudPanel.transform, "Restart", Neutral, 40, out _);
-            Place(restartButton, new Vector2(1f, 1f), new Vector2(-40f, -50f), new Vector2(250f, 110f));
-            var hintButton = NewButton("HintButton", hudPanel.transform, "Hint", Orange, 54, out var hintLabel);
-            hintLabel.color = Color.white;
-            Place(hintButton, new Vector2(0.5f, 0f), new Vector2(0f, 120f), new Vector2(360f, 140f));
+            var settingsButton = NewButton("SettingsButton", hudPanel.transform, "Settings", Chip, 34, out _);
+            Place(settingsButton, new Vector2(0f, 1f), new Vector2(36f, -45f), new Vector2(200f, 80f));
+            var restartButton = NewButton("RestartButton", hudPanel.transform, "Restart", Chip, 34, out _);
+            Place(restartButton, new Vector2(1f, 1f), new Vector2(-36f, -45f), new Vector2(200f, 80f));
+
+            var divider = Place(NewRect("Divider", hudPanel.transform), new Vector2(0.5f, 1f), new Vector2(0f, -150f), new Vector2(0f, 3f));
+            divider.anchorMin = new Vector2(0f, 1f);
+            divider.anchorMax = new Vector2(1f, 1f);
+            divider.offsetMin = new Vector2(24f, divider.offsetMin.y);
+            divider.offsetMax = new Vector2(-24f, divider.offsetMax.y);
+            var dividerImage = divider.gameObject.AddComponent<Image>();
+            dividerImage.color = Divider;
+            dividerImage.raycastTarget = false;
+
+            var levelText = NewText("LevelText", hudPanel.transform, "Level 1", 34, FontStyles.Normal);
+            levelText.color = new Color(Ink.r, Ink.g, Ink.b, 0.45f);
+            Place(levelText.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -162f), new Vector2(400f, 50f));
+
+            var hintButton = NewButton("HintButton", hudPanel.transform, "Hint", Chip, 44, out _);
+            Place(hintButton, new Vector2(0.5f, 0f), new Vector2(0f, 70f), new Vector2(300f, 110f));
 
             Assign(hud, "_levelText", levelText);
             Assign(hud, "_heartsRoot", hearts);

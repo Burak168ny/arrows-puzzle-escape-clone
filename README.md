@@ -59,6 +59,7 @@ All sprites (hearts, rounded panels, dots, dashes) and placeholder sounds are **
 | Menu | What it does |
 |---|---|
 | `Tools/Arrows/Setup Game Scene` | (Re)generates the scene and assets. Settings in `GameConfig` are kept. |
+| `Tools/Arrows/Apply Classic Style` | White board, thin monochrome arrows with sharp corners, no dots (the original look). |
 | `Tools/Arrows/Refresh Level Database` | Rescans `Levels/*.json` into the `LevelDatabase`. |
 | `Tools/Arrows/Level Generator` | Generator window (see below). |
 | `Tools/Arrows/Generate Campaign (default seed)` | Rebuilds the 30 shipped levels. |
@@ -175,7 +176,7 @@ Generating random arrows and then fixing deadlocks is slow and fragile. Instead,
 2. **Grow from the head.** Pick an empty cell and a direction with a clear ray. Put the first body cell directly behind the head (this keeps the direction). Then random-walk away: go straight or turn with probability `TurnChance`, never onto the arrow's own ray, until a random length in `[MinLength, MaxLength]`.
 3. **Center-first ordering.** Inner cells only have clear rays while the board is still empty, so heads are tried roughly from the center outwards (with jitter). Outer cells have short rays that stay clear longer.
 4. **Safe tail extension.** Leftover holes are absorbed by extending an adjacent arrow's tail. This is allowed only if the hole is not on the ray of that arrow or of any arrow placed after it, because those arrows leave earlier and must not find the hole occupied. This step raised coverage on 30×30 boards from about 60 % to 94–99 %.
-5. **Shapes.** A mask (`Rectangle`, `Circle`, `Diamond`, `Heart`, `Ring`) restricts which cells may hold arrows, so levels draw a silhouette. The board dots only mark cells that start occupied.
+5. **Shapes.** A mask (`Rectangle`, `Circle`, `Diamond`, `Heart`, `Ring`) restricts which cells may hold arrows, so levels draw a silhouette. (Optional board dots, off in the classic style, mark only cells that start occupied.)
 6. **Best-of-N.** Generate `Candidates` levels from consecutive seeds and keep the one closest to `TargetDifficulty` (or the hardest one).
 7. **Verification.** Every result is still run through the solver, and tests check 25+ seeds across sizes and shapes.
 

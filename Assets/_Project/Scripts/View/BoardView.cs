@@ -180,6 +180,7 @@ namespace Arrows.View
                 _dotsMaterial.mainTexture = ProceduralSprites.Circle.texture;
             }
             _dotsRenderer.sharedMaterial = _dotsMaterial;
+            _dotsRenderer.enabled = _theme.ShowDots;
 
             _dotVerts.Clear();
             _dotUvs.Clear();

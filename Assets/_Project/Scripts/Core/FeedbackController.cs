@@ -41,7 +41,7 @@ namespace Arrows.Core
                 ApplySettings();
             }
 
-            _confetti = ConfettiEffect.Create(_config.Theme.SpriteMaterial, _config.Theme.Palette);
+            _confetti = ConfettiEffect.Create(_config.Theme.SpriteMaterial, _config.Theme.ConfettiPalette);
         }
 
         private void OnEnable()

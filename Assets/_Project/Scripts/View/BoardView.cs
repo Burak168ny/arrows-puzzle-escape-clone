@@ -20,6 +20,7 @@ namespace Arrows.View
         private ArrowVisualSettings _arrowSettings;
 
         private HintPathView _hintPath;
+        private DotTrailView _trail;
         private MeshRenderer _dotsRenderer;
         private Mesh _dotsMesh;
         private Material _dotsMaterial;
@@ -65,6 +66,8 @@ namespace Arrows.View
 
             Layout = new BoardLayout(level.Grid.Width, level.Grid.Height, _cellSize);
             BuildDots(level.Grid);
+            if (_trail == null) _trail = DotTrailView.Create(transform, theme.SpriteMaterial);
+            _trail.Build(Layout, theme);
 
             var palette = theme.Palette;
             foreach (var arrow in level.Arrows)
@@ -143,7 +146,13 @@ namespace Arrows.View
             view.ExitFinished += OnExitFinished;
             view.Impact += v => ArrowImpact?.Invoke(v);
             view.BumpFinished += v => ArrowBumpFinished?.Invoke(v);
+            view.Moved += OnArrowMoved;
             return view;
+        }
+
+        private void OnArrowMoved(ArrowView view, float start, float end)
+        {
+            if (_trail != null) _trail.MarkArc(view.Model, start, end);
         }
 
         private void OnExitFinished(ArrowView view)

@@ -69,6 +69,9 @@ namespace Arrows.View
         /// <summary>Raised when a blocked arrow is back at rest.</summary>
         public event Action<ArrowView> BumpFinished;
 
+        /// <summary>Raised every frame while moving with the covered arc [start, end] in path units.</summary>
+        public event Action<ArrowView, float, float> Moved;
+
         public static ArrowView Create(Transform parent, Material material)
         {
             var go = new GameObject("Arrow");
@@ -257,6 +260,7 @@ namespace Arrows.View
             }
 
             Redraw();
+            Moved?.Invoke(this, _offset, _offset + _model.Length - 1);
             if (t < 1f) return;
 
             switch (_motion)
@@ -311,7 +315,7 @@ namespace Arrows.View
         {
             var c = _baseColor;
             if (_punchElapsed >= 0f)
-                c = Color.Lerp(c, Color.white, 0.3f * Mathf.Sin(_punchElapsed / _settings.PunchDuration * Mathf.PI));
+                c = Color.Lerp(c, Color.white, _settings.PunchBrighten * Mathf.Sin(_punchElapsed / _settings.PunchDuration * Mathf.PI));
             if (_flashElapsed >= 0f)
             {
                 // Two quick pulses.

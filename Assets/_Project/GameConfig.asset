@@ -19,23 +19,25 @@ MonoBehaviour:
   EndScreenDelay: 0.35
   Theme:
     SpriteMaterial: {fileID: 2100000, guid: 30e4b8278aaba7243b0475be3b876617, type: 2}
-    BackgroundColor: {r: 0.965, g: 0.957, b: 0.937, a: 1}
+    BackgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    ShowDots: 0
     DotColor: {r: 0, g: 0, b: 0, a: 0.12}
     DotSize: 0.12
     Palette:
-    - {r: 0.2, g: 0.22, b: 0.27, a: 1}
+    - {r: 0.106, g: 0.118, b: 0.212, a: 1}
+    ConfettiPalette:
     - {r: 0.27, g: 0.49, b: 0.91, a: 1}
     - {r: 0.96, g: 0.55, b: 0.18, a: 1}
     - {r: 0.3, g: 0.72, b: 0.48, a: 1}
     - {r: 0.62, g: 0.38, b: 0.86, a: 1}
     - {r: 0.93, g: 0.33, b: 0.49, a: 1}
-    - {r: 0.15, g: 0.68, b: 0.76, a: 1}
+    - {r: 0.98, g: 0.8, b: 0.2, a: 1}
   Arrows:
-    LineWidth: 0.3
-    HeadLength: 0.5
-    HeadWidth: 0.66
-    CornerVertices: 6
-    CapVertices: 6
+    LineWidth: 0.17
+    HeadLength: 0.42
+    HeadWidth: 0.5
+    CornerVertices: 0
+    CapVertices: 0
     SortingOrder: 10
     MovingSortingOrderBoost: 20
     ExitBaseDuration: 0.22
@@ -46,12 +48,12 @@ MonoBehaviour:
     SpawnDuration: 0.32
     SpawnStagger: 0.55
     PunchDuration: 0.16
-    PunchScale: 0.4
+    PunchScale: 0.5
     BumpOvershoot: 0.12
     BumpSpeed: 22
     BounceBackDuration: 0.45
     FlashColor: {r: 0.95, g: 0.22, b: 0.22, a: 1}
     FlashDuration: 0.5
     HighlightDuration: 1.2
-    HighlightScale: 0.6
+    HighlightScale: 0.9
     HighlightPulses: 3

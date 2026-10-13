@@ -8,9 +8,9 @@ namespace Arrows.View
     public sealed class ArrowVisualSettings
     {
         [Header("Shape")]
-        [Range(0.05f, 0.6f)] public float LineWidth = 0.17f;
-        [Range(0.1f, 1f)] public float HeadLength = 0.42f;
-        [Range(0.1f, 1.2f)] public float HeadWidth = 0.5f;
+        [Range(0.05f, 0.6f)] public float LineWidth = 0.13f;
+        [Range(0.1f, 1f)] public float HeadLength = 0.4f;
+        [Range(0.1f, 1.2f)] public float HeadWidth = 0.44f;
         [Tooltip("0 = sharp corners like the original game.")]
         [Range(0, 12)] public int CornerVertices = 0;
         [Range(0, 12)] public int CapVertices = 0;
@@ -32,6 +32,8 @@ namespace Arrows.View
         public float SpawnStagger = 0.55f;
         public float PunchDuration = 0.16f;
         public float PunchScale = 0.5f;
+        [Tooltip("How much a tapped arrow brightens. 0 keeps head and body exactly the ink color.")]
+        [Range(0f, 1f)] public float PunchBrighten = 0f;
 
         [Header("Blocked")]
         [Tooltip("How far past the last free cell the head travels before hitting (cells).")]
@@ -51,9 +53,10 @@ namespace Arrows.View
         /// <summary>Thin lines, sharp corners and small heads, matching the original game.</summary>
         public void ApplyClassicShape()
         {
-            LineWidth = 0.17f;
-            HeadLength = 0.42f;
-            HeadWidth = 0.5f;
+            LineWidth = 0.13f;
+            HeadLength = 0.4f;
+            HeadWidth = 0.44f;
+            PunchBrighten = 0f;
             CornerVertices = 0;
             CapVertices = 0;
             PunchScale = 0.5f;
@@ -65,7 +68,7 @@ namespace Arrows.View
     [Serializable]
     public sealed class BoardTheme
     {
-        public static readonly Color Ink = new Color(0.106f, 0.118f, 0.212f); // #1B1E36
+        public static readonly Color Ink = new Color(0.063f, 0.071f, 0.141f); // #101224, near-black navy
 
         [Tooltip("Unlit sprite material used for arrows and dots (URP 2D Sprite-Unlit-Default).")]
         public Material SpriteMaterial;
@@ -75,6 +78,15 @@ namespace Arrows.View
         public bool ShowDots = false;
         public Color DotColor = new Color(0f, 0f, 0f, 0.12f);
         [Range(0.02f, 0.4f)] public float DotSize = 0.12f;
+
+        [Header("Trail dots")]
+        [Tooltip("Reveal small grid dots in the cells a moving arrow passes over, then fade them out.")]
+        public bool TrailDots = true;
+        public Color TrailDotColor = new Color(0.063f, 0.071f, 0.141f, 0.35f);
+        [Range(0.02f, 0.4f)] public float TrailDotSize = 0.1f;
+        [Tooltip("Seconds a dot stays fully visible after the arrow last covered it.")]
+        public float TrailHold = 0.12f;
+        public float TrailFade = 0.55f;
 
         [Tooltip("Arrow colors, cycled by arrow id. A single entry gives the classic monochrome look.")]
         public Color[] Palette = { Ink };
@@ -95,6 +107,9 @@ namespace Arrows.View
         {
             BackgroundColor = Color.white;
             ShowDots = false;
+            TrailDots = true;
+            TrailDotColor = new Color(Ink.r, Ink.g, Ink.b, 0.35f);
+            TrailDotSize = 0.1f;
             Palette = new[] { Ink };
             if (ConfettiPalette == null || ConfettiPalette.Length == 0) ConfettiPalette = new BoardTheme().ConfettiPalette;
         }

@@ -1,0 +1,20 @@
+{
+    "name": "Arrows.Game",
+    "rootNamespace": "Arrows",
+    "references": [
+        "Arrows.Model",
+        "Arrows.Utils",
+        "Unity.InputSystem",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
